@@ -1,0 +1,681 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة مستر طه | الدراسات الاجتماعية</title>
+  <meta name="description" content="منصة امتحانات الدراسات الاجتماعية وإدارة الاختبارات والنتائج">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #101b35;
+      --navy2: #172746;
+      --gold: #d8b46a;
+      --gold-light: #f1dfae;
+      --bg: #f4f6fa;
+      --white: #ffffff;
+      --text: #1c2940;
+      --muted: #8390a5;
+      --border: #e7ebf2;
+      --green: #19876b;
+      --shadow: 0 12px 35px rgba(20, 34, 62, .06);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 255px;
+      background: var(--navy);
+      color: white;
+      padding: 27px 17px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      min-height: 100vh;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 7px 28px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .brand-icon {
+      width: 47px; height: 47px;
+      display: grid; place-items: center;
+      border-radius: 15px;
+      color: var(--navy);
+      background: linear-gradient(145deg, #f5e5b5, #c49a45);
+      font-size: 25px;
+      font-weight: 900;
+    }
+    .brand h2 { margin: 0; font-size: 17px; }
+    .brand p { margin: 3px 0 0; font-size: 11px; color: #bdc8d9; }
+    .menu-label {
+      color: #8998b0;
+      font-size: 11px;
+      padding: 24px 13px 10px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      color: #cbd4e3;
+      background: transparent;
+      border: 0;
+      border-radius: 11px;
+      padding: 12px 13px;
+      text-align: right;
+      margin: 3px 0;
+      font-size: 13px;
+      transition: .2s;
+    }
+    .nav-item:hover, .nav-item.active {
+      background: linear-gradient(100deg, rgba(216,180,106,.2), rgba(216,180,106,.06));
+      color: var(--gold-light);
+    }
+    .nav-item.active { border-right: 3px solid var(--gold); }
+    .nav-icon { font-size: 18px; width: 23px; text-align: center; }
+    .side-bottom { margin-top: auto; padding-top: 25px; }
+    .help-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px;
+      padding: 15px;
+    }
+    .help-card strong { color: var(--gold-light); font-size: 13px; }
+    .help-card p { font-size: 11px; color: #bdc8d9; line-height: 1.9; }
+    .help-card button {
+      width: 100%; padding: 9px;
+      border: 1px solid rgba(216,180,106,.5);
+      background: transparent; color: var(--gold-light);
+      border-radius: 8px; font-size: 12px;
+    }
+
+    .main { flex: 1; min-width: 0; }
+    .topbar {
+      height: 83px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 35px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+    .top-title h1 { margin: 0; font-size: 19px; font-weight: 800; }
+    .top-title p { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+    .top-actions { display: flex; align-items: center; gap: 12px; }
+    .demo-tag {
+      border: 1px solid #f0dfb6;
+      background: #fff9e9;
+      color: #98742d;
+      border-radius: 30px;
+      padding: 7px 11px;
+      font-size: 10px;
+    }
+    .profile {
+      display: flex; align-items: center; gap: 10px;
+      border-right: 1px solid var(--border); padding-right: 15px;
+    }
+    .avatar {
+      width: 39px; height: 39px; border-radius: 13px;
+      display: grid; place-items: center;
+      background: var(--navy); color: var(--gold-light);
+      font-weight: 800;
+    }
+    .profile strong { display: block; font-size: 12px; }
+    .profile small { color: var(--muted); font-size: 10px; }
+    .mobile-menu { display: none; }
+
+    .content { padding: 29px 35px 40px; max-width: 1600px; margin: auto; }
+    .welcome {
+      background: linear-gradient(115deg, #101b35 0%, #1d3155 65%, #273b5c 100%);
+      border-radius: 20px;
+      color: white;
+      padding: 29px 32px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: var(--shadow);
+    }
+    .welcome:after {
+      content: "";
+      position: absolute;
+      width: 250px; height: 250px;
+      border: 1px solid rgba(216,180,106,.2);
+      border-radius: 50%;
+      left: 10%; top: -145px;
+      box-shadow: 0 0 0 25px rgba(216,180,106,.025), 0 0 0 55px rgba(216,180,106,.025);
+    }
+    .welcome-copy { position: relative; z-index: 1; }
+    .eyebrow {
+      color: var(--gold-light); font-size: 11px;
+      letter-spacing: .4px; margin-bottom: 9px;
+    }
+    .welcome h2 { margin: 0; font-size: clamp(21px, 2.4vw, 29px); font-weight: 900; }
+    .welcome p { margin: 9px 0 20px; color: #c5d0e0; font-size: 12px; line-height: 1.9; }
+    .primary-btn {
+      border: 0; border-radius: 9px; padding: 11px 17px;
+      background: linear-gradient(135deg, #f0d99e, #c59c4d);
+      color: #18223a; font-weight: 800; font-size: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,.12);
+    }
+    .primary-btn:hover { filter: brightness(1.06); }
+    .welcome-symbol {
+      position: relative; z-index: 1;
+      width: 110px; height: 110px; flex-shrink: 0;
+      border: 1px solid rgba(216,180,106,.35);
+      background: rgba(255,255,255,.04);
+      border-radius: 30px; display: grid; place-items: center;
+      font-size: 54px; color: var(--gold-light);
+      transform: rotate(3deg);
+    }
+
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin: 29px 0 15px;
+    }
+    .section-head h3 { margin: 0; font-size: 16px; font-weight: 800; }
+    .section-head p { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+    .text-btn { border: 0; background: transparent; color: #9a7736; font-size: 12px; font-weight: 700; }
+
+    .stats {
+      display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 16px;
+    }
+    .stat-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: 15px; padding: 19px;
+      box-shadow: 0 4px 15px rgba(20,34,62,.025);
+    }
+    .stat-top { display: flex; justify-content: space-between; align-items: center; }
+    .stat-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: grid; place-items: center; font-size: 20px;
+      background: #f8f0dc;
+    }
+    .stat-icon.blue { background: #eaf0fb; }
+    .stat-icon.green { background: #e6f5ef; }
+    .stat-icon.purple { background: #f0eafd; }
+    .stat-label { color: var(--muted); font-size: 11px; margin-top: 14px; }
+    .stat-number { font-size: 27px; font-weight: 900; margin-top: 2px; }
+    .stat-foot { font-size: 10px; color: var(--muted); margin-top: 5px; }
+
+    .lower-grid {
+      display: grid; grid-template-columns: minmax(0,1.35fr) minmax(260px,1fr);
+      gap: 18px; margin-top: 23px;
+    }
+    .panel {
+      background: white; border: 1px solid var(--border);
+      border-radius: 16px; padding: 21px; min-width: 0;
+      box-shadow: 0 4px 15px rgba(20,34,62,.025);
+    }
+    .panel-title {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; margin-bottom: 18px;
+    }
+    .panel-title h3 { margin: 0; font-size: 14px; }
+    .panel-title span { color: var(--muted); font-size: 10px; }
+    .exam-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 0; border-bottom: 1px solid #f0f2f6;
+    }
+    .exam-row:last-child { border-bottom: 0; }
+    .exam-symbol {
+      width: 43px; height: 43px; border-radius: 12px;
+      display: grid; place-items: center; background: #f8f0dc; font-size: 19px;
+      flex-shrink: 0;
+    }
+    .exam-info { flex: 1; min-width: 0; }
+    .exam-info strong { display: block; font-size: 12px; }
+    .exam-info small { color: var(--muted); font-size: 10px; }
+    .status {
+      background: #e6f5ef; color: #19876b;
+      border-radius: 6px; padding: 5px 8px; font-size: 10px; white-space: nowrap;
+    }
+    .status.draft { background: #fff3d9; color: #a57820; }
+
+    .grade-list { display: grid; gap: 10px; }
+    .grade-row {
+      display: flex; align-items: center; gap: 12px;
+      border: 1px solid var(--border); border-radius: 11px;
+      padding: 11px 12px; background: white; text-align: right;
+      width: 100%; transition: .2s;
+    }
+    .grade-row:hover { border-color: var(--gold); background: #fffcf4; }
+    .grade-badge {
+      width: 39px; height: 39px; flex-shrink: 0;
+      display: grid; place-items: center; border-radius: 10px;
+      background: #f8f0dc; color: #8b6a2a; font-weight: 900; font-size: 12px;
+    }
+    .grade-row strong { display: block; font-size: 12px; }
+    .grade-row small { display: block; font-size: 10px; color: var(--muted); }
+    .grade-arrow { margin-right: auto; color: #9ca8b8; font-size: 19px; }
+
+    .quick-actions {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 13px;
+    }
+    .quick-card {
+      border: 1px solid var(--border); background: white; border-radius: 13px;
+      padding: 17px; text-align: right; transition: .2s;
+    }
+    .quick-card:hover { transform: translateY(-2px); border-color: var(--gold); }
+    .quick-card .q-icon { font-size: 23px; margin-bottom: 10px; }
+    .quick-card strong { display: block; font-size: 12px; }
+    .quick-card small { display: block; color: var(--muted); font-size: 10px; margin-top: 4px; line-height: 1.8; }
+
+    footer {
+      text-align: center; color: var(--muted);
+      font-size: 10px; padding: 27px 10px 0;
+    }
+    footer b { color: #9b7a39; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+    .empty-state {
+      background: white; border: 1px solid var(--border);
+      border-radius: 16px; padding: 35px; text-align: center;
+    }
+    .empty-state .big-icon { font-size: 38px; }
+    .empty-state h3 { margin: 12px 0 5px; }
+    .empty-state p { font-size: 12px; color: var(--muted); line-height: 2; }
+    .form-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; max-width: 760px;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 12px; font-weight: 700; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 11px 12px; border: 1px solid #dfe5ed;
+      border-radius: 9px; background: #fff; outline: none; font-size: 12px;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+    .form-note { font-size: 11px; line-height: 1.9; color: var(--muted); }
+    .toast {
+      position: fixed; bottom: 22px; left: 22px; z-index: 10;
+      background: var(--navy); color: white; padding: 13px 18px;
+      border-radius: 11px; box-shadow: var(--shadow);
+      font-size: 12px; display: none; max-width: calc(100vw - 44px);
+    }
+    .toast.show { display: block; animation: fade .25s ease; }
+    @keyframes fade { from {opacity:0; transform:translateY(8px)} to {opacity:1; transform:translateY(0)} }
+
+    @media (max-width: 1050px) {
+      .sidebar { width: 220px; }
+      .content { padding: 24px 22px 35px; }
+      .topbar { padding: 0 22px; }
+      .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 760px) {
+      .layout { display: block; }
+      .sidebar {
+        display: none; width: 100%; min-height: auto;
+        padding: 17px; position: relative;
+      }
+      .sidebar.open { display: flex; }
+      .side-bottom { margin-top: 12px; }
+      .mobile-menu {
+        display: inline-grid; place-items: center; width: 38px; height: 38px;
+        border: 1px solid var(--border); background: white; border-radius: 10px;
+        font-size: 20px; color: var(--navy);
+      }
+      .topbar { height: auto; min-height: 74px; padding: 13px 15px; }
+      .top-title h1 { font-size: 15px; }
+      .top-title p { font-size: 10px; }
+      .demo-tag { display: none; }
+      .profile { padding-right: 10px; }
+      .profile strong { font-size: 10px; }
+      .profile small { font-size: 9px; }
+      .avatar { width: 34px; height: 34px; }
+      .content { padding: 18px 14px 28px; }
+      .welcome { padding: 23px 19px; border-radius: 16px; }
+      .welcome-symbol { width: 65px; height: 65px; font-size: 31px; border-radius: 20px; }
+      .welcome p { font-size: 11px; }
+      .stats { gap: 10px; }
+      .stat-card { padding: 13px; }
+      .stat-number { font-size: 23px; }
+      .stat-icon { width: 35px; height: 35px; font-size: 17px; }
+      .lower-grid { grid-template-columns: 1fr; }
+      .quick-actions { grid-template-columns: 1fr; }
+      .quick-card { display: flex; align-items: center; gap: 12px; }
+      .quick-card .q-icon { margin: 0; }
+      .quick-card small { margin-top: 2px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .panel { padding: 16px; }
+    }
+    @media (max-width: 390px) {
+      .welcome-symbol { display: none; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat-number { font-size: 21px; }
+      .status { font-size: 9px; padding: 4px 5px; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">ط</div>
+      <div>
+        <h2>منصة مستر طه</h2>
+        <p>الدراسات الاجتماعية</p>
+      </div>
+    </div>
+
+    <div class="menu-label">القائمة الرئيسية</div>
+    <button class="nav-item active" data-page="dashboard"><span class="nav-icon">▦</span> لوحة التحكم</button>
+    <button class="nav-item" data-page="create"><span class="nav-icon">✚</span> إنشاء امتحان</button>
+    <button class="nav-item" data-page="exams"><span class="nav-icon">▤</span> إدارة الامتحانات</button>
+    <button class="nav-item" data-page="questions"><span class="nav-icon">☷</span> بنك الأسئلة</button>
+    <button class="nav-item" data-page="students"><span class="nav-icon">♙</span> إدارة الطلاب</button>
+    <button class="nav-item" data-page="results"><span class="nav-icon">▥</span> النتائج والدرجات</button>
+
+    <div class="menu-label">إعدادات المنصة</div>
+    <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span> الإعدادات</button>
+
+    <div class="side-bottom">
+      <div class="help-card">
+        <strong>✦ منصة تعليمية مميزة</strong>
+        <p>مكان واحد لتنظيم الامتحانات ومتابعة مستوى الطلاب.</p>
+        <button onclick="showToast('سيتم تجهيز صفحة الدعم في المرحلة القادمة.')">الدعم والمساعدة</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="mobile-menu" id="mobileMenu" aria-label="فتح القائمة">☰</button>
+        <div class="top-title">
+          <h1 id="pageTitle">لوحة التحكم</h1>
+          <p>منصة إدارة امتحانات الدراسات الاجتماعية</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span class="demo-tag">◉ نسخة تجريبية للواجهة</span>
+        <div class="profile">
+          <div class="avatar">ط</div>
+          <div><strong>مستر طه</strong><small>إدارة المنصة</small></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="page active" id="page-dashboard">
+        <div class="welcome">
+          <div class="welcome-copy">
+            <div class="eyebrow">✦ أهلاً بك في منصتك التعليمية</div>
+            <h2>مرحباً بك يا مستر طه</h2>
+            <p>كل أدواتك التعليمية في مكان واحد.<br>أنشئ امتحاناتك، نظّم أسئلتك، وتابع نتائج طلابك بسهولة.</p>
+            <button class="primary-btn" onclick="navigate('create')">＋ إنشاء امتحان جديد</button>
+          </div>
+          <div class="welcome-symbol">♜</div>
+        </div>
+
+        <div class="section-head">
+          <div><h3>نظرة عامة</h3><p>ملخص توضيحي لأقسام المنصة</p></div>
+          <span class="demo-tag">بيانات تجريبية</span>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-icon">📝</span><span style="color:#9b7a39">↗</span></div>
+            <div class="stat-label">إجمالي الامتحانات</div>
+            <div class="stat-number" id="examCount">12</div>
+            <div class="stat-foot">مثال توضيحي — ليست بيانات حقيقية</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-icon blue">👨‍🎓</span><span style="color:#5279bd">↗</span></div>
+            <div class="stat-label">الطلاب المسجلون</div>
+            <div class="stat-number">248</div>
+            <div class="stat-foot">مثال توضيحي — ليست بيانات حقيقية</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-icon green">✓</span><span style="color:#19876b">↗</span></div>
+            <div class="stat-label">محاولات الامتحان</div>
+            <div class="stat-number">186</div>
+            <div class="stat-foot">مثال توضيحي — ليست بيانات حقيقية</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-icon purple">☷</span><span style="color:#8460c5">↗</span></div>
+            <div class="stat-label">الأسئلة في البنك</div>
+            <div class="stat-number">320</div>
+            <div class="stat-foot">مثال توضيحي — ليست بيانات حقيقية</div>
+          </div>
+        </div>
+
+        <div class="lower-grid">
+          <div class="panel">
+            <div class="panel-title"><h3>الامتحانات الأخيرة</h3><button class="text-btn" onclick="navigate('exams')">عرض الكل ←</button></div>
+            <div id="recentExams">
+              <div class="exam-row">
+                <div class="exam-symbol">🌍</div>
+                <div class="exam-info"><strong>جغرافيا مصر — مراجعة عامة</strong><small>الصف الثالث الإعدادي · 30 سؤالاً</small></div>
+                <span class="status">منشور</span>
+              </div>
+              <div class="exam-row">
+                <div class="exam-symbol">🏛️</div>
+                <div class="exam-info"><strong>تاريخ — الوحدة الأولى</strong><small>الصف الثاني الإعدادي · 20 سؤالاً</small></div>
+                <span class="status">منشور</span>
+              </div>
+              <div class="exam-row">
+                <div class="exam-symbol">🗺️</div>
+                <div class="exam-info"><strong>مراجعة الخرائط</strong><small>الصف الأول الإعدادي · 15 سؤالاً</small></div>
+                <span class="status draft">مسودة</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title"><h3>المراحل الدراسية</h3><span>اختر المرحلة</span></div>
+            <div class="grade-list">
+              <button class="grade-row" onclick="selectGrade('المرحلة الابتدائية')"><span class="grade-badge">١–٦</span><span><strong>المرحلة الابتدائية</strong><small>الصف الأول إلى السادس</small></span><span class="grade-arrow">‹</span></button>
+              <button class="grade-row" onclick="selectGrade('المرحلة الإعدادية')"><span class="grade-badge">١–٣</span><span><strong>المرحلة الإعدادية</strong><small>الصف الأول إلى الثالث</small></span><span class="grade-arrow">‹</span></button>
+              <button class="grade-row" onclick="selectGrade('المرحلة الثانوية')"><span class="grade-badge">١–٣</span><span><strong>المرحلة الثانوية</strong><small>الصف الأول إلى الثالث</small></span><span class="grade-arrow">‹</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-head"><div><h3>الوصول السريع</h3><p>ابدأ المهمة التي تحتاج إليها</p></div></div>
+        <div class="quick-actions">
+          <button class="quick-card" onclick="navigate('create')"><span class="q-icon">✚</span><span><strong>إنشاء امتحان</strong><small>أضف عنوان الامتحان والصف والوقت</small></span></button>
+          <button class="quick-card" onclick="navigate('questions')"><span class="q-icon">☷</span><span><strong>بنك الأسئلة</strong><small>نظّم أسئلة التاريخ والجغرافيا</small></span></button>
+          <button class="quick-card" onclick="navigate('results')"><span class="q-icon">▥</span><span><strong>النتائج والدرجات</strong><small>مكان مخصص لمتابعة أداء الطلاب</small></span></button>
+        </div>
+      </section>
+
+      <section class="page" id="page-create">
+        <div class="section-head"><div><h3>إنشاء امتحان جديد</h3><p>أدخل البيانات الأساسية لتجهيز امتحانك</p></div></div>
+        <div class="form-card">
+          <form id="examForm">
+            <div class="form-grid">
+              <div class="field full"><label for="examTitle">عنوان الامتحان</label><input id="examTitle" required placeholder="مثال: امتحان الوحدة الأولى في التاريخ"></div>
+              <div class="field"><label for="examStage">المرحلة الدراسية</label><select id="examStage" required><option value="">اختر المرحلة</option><option>المرحلة الابتدائية</option><option>المرحلة الإعدادية</option><option>المرحلة الثانوية</option></select></div>
+              <div class="field"><label for="examGrade">الصف الدراسي</label><select id="examGrade" required><option value="">اختر الصف</option><option>الصف الأول</option><option>الصف الثاني</option><option>الصف الثالث</option><option>الصف الرابع</option><option>الصف الخامس</option><option>الصف السادس</option></select></div>
+              <div class="field"><label for="examSubject">نوع المحتوى</label><select id="examSubject"><option>تاريخ</option><option>جغرافيا</option><option>خرائط</option><option>مراجعة عامة</option></select></div>
+              <div class="field"><label for="examDuration">مدة الامتحان بالدقائق</label><input id="examDuration" type="number" min="1" max="300" value="30" required></div>
+              <div class="field"><label for="examQuestions">عدد الأسئلة</label><input id="examQuestions" type="number" min="1" max="200" value="20" required></div>
+              <div class="field"><label for="examStatus">حالة الامتحان</label><select id="examStatus"><option value="مسودة">حفظ كمسودة</option><option value="تجريبي">تجريبي</option></select></div>
+              <div class="field full"><label for="examNotes">تعليمات للطلاب (اختياري)</label><textarea id="examNotes" rows="3" placeholder="اكتب تعليمات الامتحان هنا..."></textarea></div>
+            </div>
+            <p class="form-note">مهم: هذه نسخة واجهة تجريبية. حفظ البيانات الآن داخل الصفحة فقط، ولن يتم نشر الامتحان للطلاب أو حفظه على خادم.</p>
+            <button class="primary-btn" type="submit">＋ تجهيز الامتحان</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="page" id="page-exams">
+        <div class="section-head"><div><h3>إدارة الامتحانات</h3><p>الامتحانات التي أضفتها خلال هذه الجلسة</p></div><button class="primary-btn" onclick="navigate('create')">＋ امتحان جديد</button></div>
+        <div class="panel" id="allExams"><p class="form-note">الامتحانات الظاهرة في لوحة التحكم أمثلة توضيحية. الامتحانات التي تنشئها هنا ستظهر في هذه الصفحة خلال الجلسة الحالية فقط.</p></div>
+      </section>
+
+      <section class="page" id="page-questions">
+        <div class="section-head"><div><h3>بنك الأسئلة</h3><p>تجهيز الأسئلة وتنظيمها حسب المادة والصف</p></div></div>
+        <div class="empty-state"><div class="big-icon">☷</div><h3>بنك الأسئلة جاهز للتطوير</h3><p>في المرحلة القادمة سنضيف إنشاء الأسئلة واختيارات الإجابة<br>وتحديد الإجابة الصحيحة والدرجات، مع حفظها في قاعدة بيانات.</p><button class="primary-btn" onclick="showToast('سنضيف محرر الأسئلة في المرحلة القادمة.')">تجهيز بنك الأسئلة</button></div>
+      </section>
+
+      <section class="page" id="page-students">
+        <div class="section-head"><div><h3>إدارة الطلاب</h3><p>مساحة مخصصة لتنظيم الطلاب حسب الصف الدراسي</p></div></div>
+        <div class="empty-state"><div class="big-icon">♙</div><h3>إدارة الطلاب</h3><p>سنضيف لاحقاً إضافة الطلاب بمعرّف خاص لكل طالب،<br>وتحديد صفه الدراسي وربطه بالامتحانات المناسبة.</p><button class="primary-btn" onclick="showToast('إضافة الطلاب ستحتاج إلى قاعدة بيانات آمنة.')">إعداد نظام الطلاب</button></div>
+      </section>
+
+      <section class="page" id="page-results">
+        <div class="section-head"><div><h3>النتائج والدرجات</h3><p>متابعة نتائج الطلاب بعد أداء الامتحانات</p></div></div>
+        <div class="empty-state"><div class="big-icon">▥</div><h3>ستظهر النتائج هنا</h3><p>سيتم لاحقاً ربط هذه الصفحة بإجابات الطلاب والدرجات،<br>مع التصحيح التلقائي للأسئلة الموضوعية وإتاحة التصحيح اليدوي.</p><button class="primary-btn" onclick="showToast('النتائج الحقيقية تحتاج إلى ربط قاعدة البيانات.')">إعداد النتائج</button></div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="section-head"><div><h3>إعدادات المنصة</h3><p>تخصيص اسم المنصة ومعلوماتها</p></div></div>
+        <div class="form-card">
+          <div class="field"><label for="platformName">اسم المنصة المعروض</label><input id="platformName" value="منصة مستر طه"></div>
+          <div class="field" style="margin-top:16px"><label for="platformSubject">المادة الدراسية</label><input id="platformSubject" value="الدراسات الاجتماعية"></div>
+          <p class="form-note">هذه الإعدادات تجريبية ولا تُحفظ بشكل دائم حتى الآن.</p>
+          <button class="primary-btn" onclick="saveSettings()" style="margin-top:12px">تطبيق الاسم على الواجهة</button>
+        </div>
+      </section>
+
+      <footer>صُممت بعناية لـ <b>منصة مستر طه</b> · الدراسات الاجتماعية</footer>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  const pageTitles = {
+    dashboard: "لوحة التحكم",
+    create: "إنشاء امتحان",
+    exams: "إدارة الامتحانات",
+    questions: "بنك الأسئلة",
+    students: "إدارة الطلاب",
+    results: "النتائج والدرجات",
+    settings: "الإعدادات"
+  };
+
+  let createdExams = [];
+
+  function navigate(page) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+    const section = document.getElementById("page-" + page);
+    if (section) section.classList.add("active");
+    const nav = document.querySelector('[data-page="' + page + '"]');
+    if (nav) nav.classList.add("active");
+    document.getElementById("pageTitle").textContent = pageTitles[page] || "منصة مستر طه";
+    document.getElementById("sidebar").classList.remove("open");
+    if (page === "exams") renderExams();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  document.querySelectorAll("[data-page]").forEach(button => {
+    button.addEventListener("click", () => navigate(button.dataset.page));
+  });
+
+  document.getElementById("mobileMenu").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("open");
+  });
+
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
+  }
+
+  function selectGrade(stage) {
+    navigate("create");
+    document.getElementById("examStage").value = stage;
+    showToast("تم اختيار " + stage + "؛ أكمل بيانات الامتحان.");
+  }
+
+  document.getElementById("examForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const exam = {
+      title: document.getElementById("examTitle").value.trim(),
+      stage: document.getElementById("examStage").value,
+      grade: document.getElementById("examGrade").value,
+      subject: document.getElementById("examSubject").value,
+      duration: Number(document.getElementById("examDuration").value),
+      questions: Number(document.getElementById("examQuestions").value),
+      status: document.getElementById("examStatus").value
+    };
+
+    if (!exam.title || !exam.stage || !exam.grade ||
+        !Number.isFinite(exam.duration) || exam.duration < 1 ||
+        !Number.isFinite(exam.questions) || exam.questions < 1) {
+      showToast("راجع البيانات المطلوبة من فضلك.");
+      return;
+    }
+
+    createdExams.unshift(exam);
+    document.getElementById("examCount").textContent = 12 + createdExams.length;
+    this.reset();
+    document.getElementById("examDuration").value = 30;
+    document.getElementById("examQuestions").value = 20;
+    navigate("exams");
+    showToast("تم تجهيز الامتحان في هذه الجلسة التجريبية.");
+  });
+
+  function renderExams() {
+    const container = document.getElementById("allExams");
+    if (createdExams.length === 0) {
+      container.innerHTML = '<p class="form-note">لم تنشئ امتحانات في هذه الجلسة بعد. اضغط على «امتحان جديد» للبدء. الأمثلة في لوحة التحكم ليست امتحانات محفوظة.</p>';
+      return;
+    }
+
+    container.innerHTML = "";
+    createdExams.forEach(exam => {
+      const row = document.createElement("div");
+      row.className = "exam-row";
+      const symbol = document.createElement("div");
+      symbol.className = "exam-symbol";
+      symbol.textContent = exam.subject === "تاريخ" ? "🏛️" : exam.subject === "جغرافيا" ? "🌍" : "🗺️";
+      const info = document.createElement("div");
+      info.className = "exam-info";
+      const title = document.createElement("strong");
+      title.textContent = exam.title;
+      const details = document.createElement("small");
+      details.textContent = exam.stage + " · " + exam.grade + " · " + exam.questions + " سؤال · " + exam.duration + " دقيقة";
+      info.append(title, details);
+      const status = document.createElement("span");
+      status.className = "status draft";
+      status.textContent = exam.status;
+      row.append(symbol, info, status);
+      container.appendChild(row);
+    });
+  }
+
+  function saveSettings() {
+    const name = document.getElementById("platformName").value.trim();
+    const subject = document.getElementById("platformSubject").value.trim();
+    if (!name) {
+      showToast("اكتب اسم المنصة أولاً.");
+      return;
+    }
+    document.querySelector(".brand h2").textContent = name;
+    document.querySelector(".brand p").textContent = subject || "منصة تعليمية";
+    showToast("تم تطبيق الاسم مؤقتاً على الواجهة.");
+  }
+</script>
+</body>
+</html>
